@@ -1,5 +1,5 @@
-<RCC> 
-  <qresource prefix="/plugins/QGISMarkers" > 
-    <file>icon.png</file> 
-  </qresource> 
-</RCC> 
+<RCC>
+    <qresource prefix="/plugins/qgismarkers" >
+        <file>qgismarkers.png</file>
+    </qresource>
+</RCC>

@@ -17,15 +17,29 @@ email                : sdjones@sdjones.org
  ***************************************************************************/
  This script initializes the plugin, making it known to QGIS.
 """
-def name(): 
-  return "Markers on maps" 
+
+
+def name():
+    return "Markers on maps"
+
+
 def description():
-  return "Puts markers on maps!"
-def version(): 
-  return "Version 0.0.0.1" 
+    return "Puts markers on maps!"
+
+
+def version():
+    return "Version 0.0.0.1"
+
+
+def icon():
+    return "qgismarkers.png"
+
+
 def qgisMinimumVersion():
-  return "2.0"
-def classFactory(iface): 
-  # load QGISMarkers class from file QGISMarkers
-  from QGISMarkers import QGISMarkers 
-  return QGISMarkers(iface)
+    return "2.0"
+
+
+def classFactory(iface):
+    # load QGISMarkers class from file QGISMarkers
+    from QGISMarkers import QGISMarkers
+    return QGISMarkers(iface)

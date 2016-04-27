@@ -1,11 +1,8 @@
-# Makefile for Markers on maps plugin 
-UI_FILES = Ui_QGISMarkers.py
-
-RESOURCE_FILES = resources.py
+# Makefile for QGIS Markers
 
 default: compile
 	
-compile: $(UI_FILES) $(RESOURCE_FILES)
+compile:
 
 %.py : %.qrc
 	pyrcc4 -o $@  $<

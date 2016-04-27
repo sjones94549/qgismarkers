@@ -16,46 +16,51 @@ email                : sdjones@sdjones.org
  *                                                                         *
  ***************************************************************************/
 """
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import * 
+from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
-# Initialize Qt resources from file resources.py
-import resources
-# Import the code for the dialog
-from QGISMarkersDialog import QGISMarkersDialog
+from qgis.gui import QgsMapToolEmitPoint
 
-class QGISMarkers: 
 
-  def __init__(self, iface):
-    # Save reference to the QGIS interface
-    self.iface = iface
+class QGISMarkers:
+    TAG = 'QGISMarkers'
 
-  def initGui(self):  
-    # Create action that will start plugin configuration
-    self.action = QAction(QIcon(":/plugins/QGISMarkers/icon.png"), \
-        "Place Markers", self.iface.mainWindow())
-    # connect the action to the run method
-    QObject.connect(self.action, SIGNAL("activated()"), self.run) 
+    @staticmethod
+    def log(message):
+        QgsMessageLog.logMessage(message, QGISMarkers.TAG)
 
-    # Add toolbar button and menu item
-    self.iface.addToolBarIcon(self.action)
-    self.iface.addPluginToMenu("&Place Markers", self.action)
+    def __init__(self, iface):
+        QGISMarkers.log("__init__")
+        self.iface = iface
+        self.canvas = iface.mapCanvas()
+        self.clickTool = QgsMapToolEmitPoint(self.canvas)
 
-  def unload(self):
-    # Remove the plugin menu item and icon
-    self.iface.removePluginMenu("&Place Markers",self.action)
-    self.iface.removeToolBarIcon(self.action)
+    def initGui(self):
+        QGISMarkers.log("initGui")
 
-  # run method that performs all the real work
-  def run(self): 
-    # create and show the dialog 
-    dlg = QGISMarkersDialog() 
-    # show the dialog
-    dlg.show()
-    result = dlg.exec_() 
-    # See if OK was pressed
-    if result == 1: 
-      # do something useful (delete the line containing pass and
-      # substitute with your code
-      pass 
+        # Connect to map clicks
+        QObject.connect(self.clickTool, SIGNAL("canvasClicked(const QgsPoint &, Qt::MouseButton)"), self.click)
+
+        # Menu actions: Plugins->Place Markers->[menu item]
+        self.action = QAction(QIcon(":/plugins/qgismarkers/qgismarkers.png"), "Log Map Clicks", self.iface.mainWindow())
+        QObject.connect(self.action, SIGNAL("triggered()"), self.activate)
+
+        # Menu: Plugins->[Place Markers]
+        self.iface.addToolBarIcon(self.action)
+        self.iface.addPluginToMenu("&QGIS Markers", self.action)
+
+    def unload(self):
+        QGISMarkers.log("unload")
+        self.iface.removePluginMenu("&QGIS Markers", self.action)
+        self.iface.removeToolBarIcon(self.action)
+
+    def activate(self):
+        QGISMarkers.log("activate")
+        self.canvas.setMapTool(self.clickTool)
+
+    def click(self, point, button):
+        crsSource = self.iface.mapCanvas().mapRenderer().destinationCrs()
+        latlong = QgsCoordinateTransform(crsSource, QgsCoordinateReferenceSystem(4326)).transform(point)
+        mercator = QgsCoordinateTransform(crsSource, QgsCoordinateReferenceSystem(3857)).transform(point)
+        QGISMarkers.log("click %s:  4326(%f, %f)  3857(%f, %f)" %
+                        (button, latlong.x(), latlong.y(), mercator.x(), mercator.y()))
