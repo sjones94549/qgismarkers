@@ -17,7 +17,7 @@ homepage=https://github.com/sjones94549/qgismarkers
 tracker=https://github.com/sjones94549/qgismarkers/issues
 repository=https://github.com/sjones94549/qgismarkers
 
-icon=qgismarkers.png
+icon=icon.png
 
 experimental=False
 deprecated=False

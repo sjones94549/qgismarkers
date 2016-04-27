@@ -1,11 +1,14 @@
 # Makefile for QGIS Markers
 
+RESOURCE_FILES = resources_rc.py
+
 default: compile
 	
-compile:
+compile: $(RESOURCE_FILES)
 
-%.py : %.qrc
-	pyrcc4 -o $@  $<
+%_rc.py : %.qrc
+	pyrcc4 -o $*_rc.py  $<
 
-%.py : %.ui
-	pyuic4 -o $@ $<
+clean:
+	rm -f $(RESOURCE_FILES)
+	rm -f *.pyc
