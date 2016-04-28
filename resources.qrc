@@ -1,6 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource prefix="/plugins/qgismarkers" >
         <file>icon.png</file>
-        <file>icons/log.png</file>
+        <file>icons/place.png</file>
     </qresource>
 </RCC>
