@@ -52,7 +52,7 @@ class QGISMarkers:
         if self.layer is not None:
             return
         self.log("create_layer")
-        path = "Point?crs=epsg:3857&field=id:integer&field=label:string(120)&field=longlat:string(120)&field=url:string(120)&field=x:double&field=y:double&field=longitude:double&field=latitude:double&index=yes"
+        path = "Point?crs=epsg:3857&field=id:integer&field=label:string(120)&field=longlat:string(120)&field=xy:string(120)&field=url:string(120)&field=x:double&field=y:double&field=longitude:double&field=latitude:double&index=yes"
         self.layer = QgsVectorLayer(path=path, baseName="Temporary Markers", providerLib="memory")
         self.layer.setDisplayField("label")
         QgsMapLayerRegistry.instance().addMapLayer(self.layer)
@@ -77,12 +77,13 @@ class QGISMarkers:
         id = self.next_marker_id()
         label = "Marker %d" % id
         longlat = "%.010f,%.010f" % (point_latlong.x(), point_latlong.y())
+        xy = "%.010f,%.010f" % (point_mercator.x(), point_mercator.y())
         url = "https://www.google.com/maps?q=%.010f,%.010f&z=%d" % (point_latlong.y(), point_latlong.x(), 18)
         marker = QgsFeature()
         marker.setGeometry(QgsGeometry.fromPoint(point_mercator))
 
         # Set attributes in the order specified by the layer `path`
-        marker.setAttributes([id, label, longlat, url,
+        marker.setAttributes([id, label, longlat, xy, url,
                               point_mercator.x(), point_mercator.y(), point_latlong.x(), point_latlong.y()])
 
         # Add marker to layer
