@@ -32,7 +32,7 @@ def version():
 
 
 def icon():
-    return "qgismarkers.png"
+    return "icon.png"
 
 
 def qgisMinimumVersion():
